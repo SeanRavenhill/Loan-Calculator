@@ -15,7 +15,7 @@ def monthly_payments():
         loan = input()
         exit_program(loan)
         try:
-            loan = int(loan)
+            loan = float(loan)
             break
         except ValueError:
             print("\nInput Error. Please Try again.")
@@ -25,7 +25,7 @@ def monthly_payments():
         payment = input()
         exit_program(payment)
         try:
-            payment = int(payment)
+            payment = float(payment)
             break
         except ValueError:
             print("\nInput Error. Please Try again.")
@@ -34,20 +34,25 @@ def monthly_payments():
         print("\nEnter the loan interest:")
         interest = input()
         exit_program(interest)
-        if interest == 0:
-            print("\nSorry calculator does not work with 0% interest loands.")
+        if float(interest) >= 12:
+            print("\nInterest too high to be possible. Please try again.")
             monthly_payments()
         else:
             try:
-                interest = int(interest)
+                interest = float(interest)
                 break
             except ValueError:
                 print("\nInput Error. Please Try again.")
 
-    rate = interest / (12 * 100)
-    months = math.ceil(math.log((payment / (payment - rate * loan)), 1 + rate))
-    y = math.floor(months / 12)
-    m = months % 12
+    if interest == 0:
+        months = math.ceil(loan / payment)
+        y = math.floor(months / 12)
+        m = math.ceil(months % 12)
+    else:
+        rate = interest / (12 * 100)
+        months = math.log((payment / (payment - rate * loan)), 1 + rate)
+        y = math.floor(math.ceil(months / 12))
+        m = math.ceil(months % 12)
 
     if y >= 2 and m >= 2:
         print(f"\nIt will take {y} years and {m} months to repay this loan!")
@@ -63,11 +68,6 @@ def monthly_payments():
         print(f"\nIt will take {y} years to repay this loan!")
     elif y == 1 and m == 0:
         print(f"\nIt will take {y} year to repay this loan!")
-
-    # if months == 1:
-    # print(f"\nIt will take {months} month to repay the loan\n")
-    # else:
-    # print(f"\nIt will take {months} months to repay the loan\n")
 
 
 def annuity():
@@ -106,73 +106,3 @@ elif calc == "p":
     principal()
 else:
     print("\nProgram Error. Shutting down.\n")
-
-
-'''
-    while True:
-        n = input()
-        exit_program(n)
-        try:
-            m = int(m)
-            months = math.ceil(principal / m)
-            break
-        except ValueError:
-            print("Input Error. Please Try again.\n")
-    if months == 1:
-        print(f"\nIt will take {months} month to repay the loan\n")
-    else:
-        print(f"\nIt will take {months} months to repay the loan\n")
-
-
-while True:
-    principal = input()
-    exit_program(principal)
-    try:
-        principal = int(principal)
-        break
-    except ValueError:
-        print("Input Error. Please Try again.\n")
-
-while True:
-    calc = input()
-    exit_program(calc)
-    if calc == "m" or calc == "p":
-        break
-    else:
-        print("Input Error. Please Try again.")
-        print('- type "m" - for number of monthly payments,')
-        print('- type "p" - for the monthly payment:\n')
-
-if calc == "m":
-    print("Enter the monthly payment:")
-    while True:
-        m = input()
-        exit_program(m)
-        try:
-            m = int(m)
-            months = math.ceil(principal / m)
-            break
-        except ValueError:
-            print("Input Error. Please Try again.\n")
-    if months == 1:
-        print(f"\nIt will take {months} month to repay the loan\n")
-    else:
-        print(f"\nIt will take {months} months to repay the loan\n")
-else:
-    print("Enter the number of months:")
-    while True:
-        p = input()
-        exit_program(p)
-        try:
-            p = int(p)
-            pay = math.ceil(principal / p)
-            uneven_div = principal % p
-            last = principal - (pay * (p - 1))
-            break
-        except ValueError:
-            print("Input Error. Please Try again.\n")
-    if uneven_div:
-        print(f"Your monthly payment = {pay} and the last payment = {last}.")
-    else:
-        print(f"Your monthly payment = {pay}")
-'''
