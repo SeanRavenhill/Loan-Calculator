@@ -1,6 +1,33 @@
 import math
 
 
+def main():
+    print("What do you want to calculate?")
+    print('\n- type "n" for number of monthly payments,')
+    print('- type "a" for annuity monthly payment amount,')
+    print('- type "p" for loan principal:')
+
+    while True:
+        calc = input().lower()
+        exit_program(calc)
+        if calc == "n" or calc == "a" or calc == "p":
+            break
+        else:
+            print("\nInput Error. Please Try again.")
+            print('\n- type "n" for number of monthly payments,')
+            print('- type "a" for annuity monthly payment amount,')
+            print('- type "p" for loan principal:')
+
+    if calc == "n":
+        monthly_payments()
+    elif calc == "a":
+        annuity()
+    elif calc == "p":
+        principal()
+    else:
+        print("\nProgram Error. Shutting down.\n")
+
+
 def exit_program(input):
     if input.lower() == "done" or input.lower() == "exit":
         print("\nProgram shutting down.\n")
@@ -83,16 +110,30 @@ def monthly_payments():
     loan = loan_principal()
     payment = monthly_payment()
     interest = loan_interest()
+    y = 0
+    m = 0
 
     if interest == 0:
         months = math.ceil(loan / payment)
         y = math.floor(months / 12)
         m = math.ceil(months % 12)
+        if m == 12:
+            y += 1
+            m += 0
     else:
         rate = interest / (12 * 100)
-        months = math.log((payment / (payment - rate * loan)), 1 + rate)
-        y = math.floor(months / 12)
-        m = math.ceil(months % 12)
+        log_check = payment - (rate * loan)
+        if log_check <= 0:
+            print("\nLoan at interest rate not possible. Please try again.")
+            monthly_payments()
+        else:
+            base = payment / (payment - rate * loan)
+            months = math.log(base, 1 + rate)
+            y = math.floor(months / 12)
+            m = math.ceil(months % 12)
+            if m == 12:
+                y += 1
+                m += 0
 
     if y >= 2 and m >= 2:
         print(f"\nIt will take {y} years and {m} months to repay this loan!")
@@ -138,32 +179,15 @@ def principal():
     a = annuity_payment()
     n = payment_period()
     i = loan_interest()
-    r = i / (12 * 100)
-    principal = math.floor(a / ((r * ((1 + r) ** n)) / (((1 + r) ** n) - 1)))
-    print(f"\nYour loan principal = {principal}!")
-
-
-print("\nWhat do you want to calculate?")
-print('\n- type "n" for number of monthly payments,')
-print('- type "a" for annuity monthly payment amount,')
-print('- type "p" for loan principal:')
-
-while True:
-    calc = input().lower()
-    exit_program(calc)
-    if calc == "n" or calc == "a" or calc == "p":
-        break
+    if i == 0:
+        principal = math.floor(a * n)
+        print(f"\nYour loan principal = {principal}!")
     else:
-        print("\nInput Error. Please Try again.")
-        print('\n- type "n" for number of monthly payments,')
-        print('- type "a" for annuity monthly payment amount,')
-        print('- type "p" for loan principal:')
+        r = i / (12 * 100)
+        principal = a / ((r * ((1 + r) ** n)) / (((1 + r) ** n) - 1))
+        principal = math.floor(principal)
+        print(f"\nYour loan principal = {principal}!")
 
-if calc == "n":
-    monthly_payments()
-elif calc == "a":
-    annuity()
-elif calc == "p":
-    principal()
-else:
-    print("\nProgram Error. Shutting down.\n")
+
+if __name__ == '__main__':
+    main()
