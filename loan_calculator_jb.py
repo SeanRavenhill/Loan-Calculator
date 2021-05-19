@@ -9,7 +9,7 @@ def exit_program(input):
         pass
 
 
-def monthly_payments():
+def loan_principal():
     while True:
         print("\nEnter the loan principal:")
         loan = input()
@@ -20,6 +20,10 @@ def monthly_payments():
         except ValueError:
             print("\nInput Error. Please Try again.")
 
+    return loan
+
+
+def monthly_payment():
     while True:
         print("\nEnter the monthly payment:")
         payment = input()
@@ -30,19 +34,55 @@ def monthly_payments():
         except ValueError:
             print("\nInput Error. Please Try again.")
 
+    return payment
+
+
+def loan_interest():
     while True:
         print("\nEnter the loan interest:")
         interest = input()
         exit_program(interest)
-        if float(interest) >= 12:
-            print("\nInterest too high to be possible. Please try again.")
-            monthly_payments()
-        else:
-            try:
-                interest = float(interest)
-                break
-            except ValueError:
-                print("\nInput Error. Please Try again.")
+        try:
+            interest = float(interest)
+            break
+        except ValueError:
+            print("\nInput Error. Please Try again.")
+
+    return interest
+
+
+def payment_period():
+    while True:
+        print("\nEnter the number of periods:")
+        periods = input()
+        exit_program(periods)
+        try:
+            periods = float(periods)
+            break
+        except ValueError:
+            print("\nInput Error. Please Try again.")
+
+    return periods
+
+
+def annuity_payment():
+    while True:
+        print("\nEnter the annuity payment:")
+        annuity_payment = input()
+        exit_program(annuity_payment)
+        try:
+            annuity_payment = float(annuity_payment)
+            break
+        except ValueError:
+            print("\nInput Error. Please Try again.")
+
+    return annuity_payment
+
+
+def monthly_payments():
+    loan = loan_principal()
+    payment = monthly_payment()
+    interest = loan_interest()
 
     if interest == 0:
         months = math.ceil(loan / payment)
@@ -51,7 +91,7 @@ def monthly_payments():
     else:
         rate = interest / (12 * 100)
         months = math.log((payment / (payment - rate * loan)), 1 + rate)
-        y = math.floor(math.ceil(months / 12))
+        y = math.floor(months / 12)
         m = math.ceil(months % 12)
 
     if y >= 2 and m >= 2:
@@ -71,15 +111,36 @@ def monthly_payments():
 
 
 def annuity():
-    print("\nEnter the loan principal:")
-    a = input()
-    exit_program(a)
+    loan = loan_principal()
+    n = payment_period()
+    i = loan_interest()
+    if i == 0:
+        annuity = math.ceil(loan / n)
+        last = int(round((loan % annuity), 0))
+        if last:
+            print(f"\nYour monthly payment = {annuity} and the last payment"
+                  f" = {last}!")
+        else:
+            print(f"\nYour monthly payment = {annuity}!")
+    else:
+        r = i / (12 * 100)
+        annuity = loan * ((r * ((1 + r) ** n)) / (((1 + r) ** n) - 1))
+        annuity = math.ceil(annuity)
+        last = int(round((loan % annuity), 0))
+        if last:
+            print(f"\nYour monthly payment = {annuity} and the last payment"
+                  f" = {last}!")
+        else:
+            print(f"\nYour monthly payment = {annuity}!")
 
 
 def principal():
-    print("\nEnter the loan principal:")
-    p = input()
-    exit_program(p)
+    a = annuity_payment()
+    n = payment_period()
+    i = loan_interest()
+    r = i / (12 * 100)
+    principal = math.floor(a / ((r * ((1 + r) ** n)) / (((1 + r) ** n) - 1)))
+    print(f"\nYour loan principal = {principal}!")
 
 
 print("\nWhat do you want to calculate?")
