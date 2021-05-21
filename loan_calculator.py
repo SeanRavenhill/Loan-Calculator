@@ -3,23 +3,27 @@ import math
 
 def main():
     print("What do you want to calculate?")
-    print('\n- type "n" for number of monthly payments,')
-    print('- type "a" for annuity monthly payment amount,')
-    print('- type "p" for loan principal:')
+    print('\n- type "n" for number of monthly payments.')
+    print('- type "d" for differentiated payments.')
+    print('- type "a" for annuity monthly payment amount.')
+    print('- type "p" for loan principal.')
 
     while True:
         calc = input().lower()
         exit_program(calc)
-        if calc == "n" or calc == "a" or calc == "p":
+        if calc == "n" or calc == "d" or calc == "a" or calc == "p":
             break
         else:
             print("\nInput Error. Please Try again.")
-            print('\n- type "n" for number of monthly payments,')
-            print('- type "a" for annuity monthly payment amount,')
-            print('- type "p" for loan principal:')
+            print('\n- type "n" for number of monthly payments.')
+            print('- type "d" for differentiated payments.')
+            print('- type "a" for annuity monthly payment amount.')
+            print('- type "p" for loan principal.')
 
     if calc == "n":
         monthly_payments()
+    elif calc == "d":
+        differentiated()
     elif calc == "a":
         annuity()
     elif calc == "p":
@@ -127,6 +131,7 @@ def monthly_payments():
             print("\nLoan at interest rate not possible. Please try again.")
             monthly_payments()
         else:
+            print("made it here")
             base = payment / (payment - rate * loan)
             months = math.log(base, 1 + rate)
             y = math.floor(months / 12)
@@ -155,9 +160,13 @@ def annuity():
     loan = loan_principal()
     n = payment_period()
     i = loan_interest()
+
+    total_payments = 0
+
     if i == 0:
         annuity = math.ceil(loan / n)
         last = int(round((loan % annuity), 0))
+        total_payments += ((annuity * n) - annuity) + last
         if last:
             print(f"\nYour monthly payment = {annuity} and the last payment"
                   f" = {last}!")
@@ -168,11 +177,16 @@ def annuity():
         annuity = loan * ((r * ((1 + r) ** n)) / (((1 + r) ** n) - 1))
         annuity = math.ceil(annuity)
         last = int(round((loan % annuity), 0))
+        total_payments += ((annuity * n) - annuity) + last
         if last:
             print(f"\nYour monthly payment = {annuity} and the last payment"
                   f" = {last}!")
         else:
             print(f"\nYour monthly payment = {annuity}!")
+
+    overpayment = int(total_payments - loan)
+
+    print(f"\nOverpayment = {overpayment}")
 
 
 def principal():
@@ -187,6 +201,26 @@ def principal():
         principal = a / ((r * ((1 + r) ** n)) / (((1 + r) ** n) - 1))
         principal = math.floor(principal)
         print(f"\nYour loan principal = {principal}!")
+
+
+def differentiated():
+    p = loan_principal()
+    n = payment_period()
+    i = loan_interest()
+    r = (i / (12 * 100))  # Interest Rate
+
+    total_payments = 0
+
+    for m in range(int(n)):
+        m = m + 1
+        d = (p / n) + r * (p - ((p * (m - 1)) / n))
+        d = (math.ceil(d))
+        total_payments += d
+        print(f"Month {m}: payment is {d}")
+
+    overpayment = int(total_payments - p)
+
+    print(f"\nOverpayment = {overpayment}")
 
 
 if __name__ == '__main__':
