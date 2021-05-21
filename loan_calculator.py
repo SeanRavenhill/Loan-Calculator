@@ -123,7 +123,7 @@ def monthly_payments():
         m = math.ceil(months % 12)
         if m == 12:
             y += 1
-            m += 0
+            m = 0
     else:
         rate = interest / (12 * 100)
         log_check = payment - (rate * loan)
@@ -131,14 +131,13 @@ def monthly_payments():
             print("\nLoan at interest rate not possible. Please try again.")
             monthly_payments()
         else:
-            print("made it here")
             base = payment / (payment - rate * loan)
             months = math.log(base, 1 + rate)
             y = math.floor(months / 12)
             m = math.ceil(months % 12)
             if m == 12:
                 y += 1
-                m += 0
+                m = 0
 
     if y >= 2 and m >= 2:
         print(f"\nIt will take {y} years and {m} months to repay this loan!")
@@ -154,6 +153,12 @@ def monthly_payments():
         print(f"\nIt will take {y} years to repay this loan!")
     elif y == 1 and m == 0:
         print(f"\nIt will take {y} year to repay this loan!")
+
+    total_payments = int(payment * ((y * 12) + m))
+    overpayment = int(total_payments - loan)
+
+    if overpayment > 0:
+        print(f"\nOverpayment = {overpayment}")
 
 
 def annuity():
@@ -186,21 +191,30 @@ def annuity():
 
     overpayment = int(total_payments - loan)
 
-    print(f"\nOverpayment = {overpayment}")
+    if overpayment > 0:
+        print(f"\nOverpayment = {overpayment}")
 
 
 def principal():
     a = annuity_payment()
     n = payment_period()
     i = loan_interest()
+    p = 0
     if i == 0:
         principal = math.floor(a * n)
+        p = 0
         print(f"\nYour loan principal = {principal}!")
     else:
         r = i / (12 * 100)
         principal = a / ((r * ((1 + r) ** n)) / (((1 + r) ** n) - 1))
         principal = math.floor(principal)
+        p += principal
         print(f"\nYour loan principal = {principal}!")
+
+    overpayment = int((a * n) - p)
+
+    if overpayment > 0:
+        print(f"\nOverpayment = {overpayment}")
 
 
 def differentiated():
@@ -220,7 +234,8 @@ def differentiated():
 
     overpayment = int(total_payments - p)
 
-    print(f"\nOverpayment = {overpayment}")
+    if overpayment > 0:
+        print(f"\nOverpayment = {overpayment}")
 
 
 if __name__ == '__main__':
