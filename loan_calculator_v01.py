@@ -3,10 +3,10 @@ import math
 
 def main():
     print("What do you want to calculate?")
-    print('\n- type "n" for number of monthly payments.')
-    print('- type "d" for differentiated payments.')
-    print('- type "a" for annuity monthly payment amount.')
+    print('\n- type "a" for annuity monthly payment amount.')
+    print('- type "n" for number of monthly payments.')
     print('- type "p" for loan principal.')
+    print('- type "d" for differentiated payments.')
 
     while True:
         calc = input().lower()
@@ -15,10 +15,10 @@ def main():
             break
         else:
             print("\nInput Error. Please Try again.")
-            print('\n- type "n" for number of monthly payments.')
-            print('- type "d" for differentiated payments.')
-            print('- type "a" for annuity monthly payment amount.')
+            print('\n- type "a" for annuity monthly payment amount.')
+            print('- type "n" for number of monthly payments.')
             print('- type "p" for loan principal.')
+            print('- type "d" for differentiated payments.')
 
     if calc == "n":
         monthly_payments()
